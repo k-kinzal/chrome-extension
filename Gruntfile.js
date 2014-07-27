@@ -263,7 +263,7 @@ module.exports = function (grunt) {
         chromeManifest: {
             dist: {
                 options: {
-                    buildnumber: true,
+                    buildnumber: false,
                     background: {
                         target: 'scripts/background.js',
                         exclude: [
@@ -296,7 +296,7 @@ module.exports = function (grunt) {
             dist: {
                 src: 'dist/',
                 dest: 'package/',
-                filename: 'chrome extension<%= config.manifest.version %>.crx',
+                filename: 'extension.crx',
                 privateKey: 'app.pem'
             }
         }
