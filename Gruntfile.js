@@ -289,6 +289,16 @@ module.exports = function (grunt) {
                     dest: ''
                 }]
             }
+        },
+
+        // Build to crx
+        crx: {
+            dist: {
+                src: 'dist/',
+                dest: 'package/',
+                filename: 'chrome extension<%= config.manifest.version %>.crx',
+                privateKey: 'app.pem'
+            }
         }
     });
 
@@ -317,6 +327,11 @@ module.exports = function (grunt) {
         'copy',
         'usemin',
         'compress'
+    ]);
+
+    grunt.registerTask('build-crx', [
+        'build',
+        'crx:dist'
     ]);
 
     grunt.registerTask('default', [
