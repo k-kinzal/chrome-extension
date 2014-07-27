@@ -1,13 +1,31 @@
 language:
 - node_js
 node_js:
-- '0.11'
+- 0.1
 before_install:
+- echo TRAVIS_TAG
 - sudo pip install awscli
 - npm install -g grunt-cli bower
 - npm install
 install:
 - bower install
 - cd test && bower install && cd ../
+before_script:
+- aws s3 cp s3://secure-warehouse/chatwork-codehilight-extension/app.pem app.pem
+- "if [[`echo $TRAVIS_TAG` ne '']]; then sed -i -e 's/\"version\": \".*\"/\"version\": \"'${TRAVIS_TAG}'\"/' app/manifest.json; fi"
 script:
 - grunt test
+- grunt build-crx
+deploy:
+  provider: releases
+  api_key:
+    secure: lWwS6aFbVJ2DD6h9MBEMMiYXGV2usLdJIZzaod9Ue7/4tpyw+XJ+XOm8jNVNfhvFURWlOi3TevEO7tc13g6HCfLLelkw5sDZ9ufZprslG+fJHbycXBNWuQXMEiMidp9DQOFDlYLG/TRX8FuSAbbWshp7ubmdaNRyuKZQzJH4bA8=
+  file: "package/chrome extension.crx"
+  on:
+    repo: k-kinzal/chrome-extension
+    branch: master
+    tags: true
+env:
+  global:
+  - secure: LQ2Q6Va3iswpyq9ElyWxFj/Qa8i5ts1quZAfGLTZeIj9y81dsKMV0n0/XwVhpGjK2n9jX7K1/91euu11Tzk2GClV+LB3xAYyfKwE46iZe+uy0pRSwXpXjHUMliFPxfWo7ez9D9ycNdKLofsxOgYxaBbo6pmWfVHe6DmG0xp9G5o=
+  - secure: aGa/O/EjaUVPmxBKXxJKJXjH3zSNjntugMAqGKNhciFC/2MJrUIgjTloFJL+5hRERd1BkfFOVv6rHuM3gksQtHywOb/LX74oXjStgFHZ1RskEaaT+Po+TT60rS+61VQypkKImjQtsfCyZL3zu1mr5jGmtJOg5ks2aNlnozOZzbs=
